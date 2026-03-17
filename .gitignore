@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.*.local
+*.log
+logs/
+.DS_Store
+Thumbs.db
+*.tmp
+tmp/
+temp/
+app_review/
+app_docs/
+specs/
+.vscode/settings.json
