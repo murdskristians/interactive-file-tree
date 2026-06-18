@@ -6,13 +6,16 @@ A Vue 3 + TypeScript interactive file tree component with drag-and-drop support,
 
 - **Hierarchical File Tree Display**: Navigate through files and folders with expandable/collapsible nodes
 - **Drag and Drop**: Reorganize files and folders by dragging them to new locations
-- **CRUD Operations**: Create new files and folders, delete items
+- **CRUD Operations**: Create files and folders (placed relative to the current selection), rename, and delete items
+- **Inline Rename**: Rename a node in place via double-click, the toolbar, or `F2`
+- **Live Search**: Filter the tree as you type, with matching nodes highlighted and ancestor folders auto-expanded
 - **File Type Icons**: Automatic icon assignment based on file extensions (via Lucide icons)
 - **Description Panel**: View details of selected files including path and description
-- **Export/Import**: Export the tree structure as JSON
-- **Keyboard Support**: Delete key to remove selected items
+- **Export / Import**: Export the tree as JSON and re-import it later for a full round trip
+- **Auto-save**: The tree and view state are persisted to `localStorage` and restored on reload
+- **Keyboard Support**: `Delete` to remove, `F2` to rename, `Ctrl`/`Cmd`+`F` to search, `Esc` to clear search
 - **Responsive Design**: Works on desktop and mobile devices
-- **Dark Mode Support**: Automatic dark mode based on system preferences
+- **Theme Toggle**: Switch between system, light and dark themes; the choice is persisted
 
 ## Quick Start
 
@@ -145,12 +148,17 @@ const myTreeData: FileTreeNode[] = [
 |--------|--------|
 | Click | Select node |
 | Double-click folder | Expand/collapse |
+| Double-click name | Rename node inline |
 | Drag file/folder | Move to another folder |
-| New File button | Create file in selected folder |
-| New Folder button | Create folder in selected folder |
-| Delete button | Remove selected item |
-| Delete key | Remove selected item |
+| New File button | Create file in/next to the selection |
+| New Folder button | Create folder in/next to the selection |
+| Rename button / `F2` | Rename selected item inline |
+| Delete button / `Delete` key | Remove selected item |
+| Import button | Load a tree from a JSON file |
 | Export button | Download tree as JSON |
+| `Ctrl`/`Cmd` + `F` | Focus the search box |
+| `Esc` | Clear the active search |
+| Theme toggle (header) | Cycle system → light → dark |
 
 ## Configuration
 
