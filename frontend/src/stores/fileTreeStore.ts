@@ -18,6 +18,8 @@ import {
   filterTreeByName,
 } from '../utils/fileTreeUtils';
 
+const STORAGE_KEY = 'interactive-file-tree:state';
+
 export const useFileTreeStore = defineStore('fileTree', {
   state: (): FileTreeState => ({
     tree: [],
@@ -381,6 +383,52 @@ export const useFileTreeStore = defineStore('fileTree', {
     clearSearch(): void {
       this.searchQuery = '';
       this.filteredNodeIds = null;
+    },
+
+    /**
+     * Persist the tree and view state (expanded folders, selection) to
+     * localStorage. The Set of expanded ids is serialised as an array.
+     */
+    saveToStorage(): void {
+      try {
+        const payload = JSON.stringify({
+          tree: this.tree,
+          expandedNodeIds: [...this.expandedNodeIds],
+          selectedNodeId: this.selectedNodeId,
+        });
+        localStorage.setItem(STORAGE_KEY, payload);
+      } catch (error) {
+        console.error('Failed to save file tree to storage:', error);
+      }
+    },
+
+    /**
+     * Restore a previously persisted tree from localStorage.
+     * Returns true if valid state was loaded, false otherwise.
+     */
+    loadFromStorage(): boolean {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return false;
+
+        const data = JSON.parse(raw);
+        if (!Array.isArray(data.tree)) return false;
+
+        this.tree = cloneTree(data.tree);
+        this.expandedNodeIds = new Set<string>(
+          Array.isArray(data.expandedNodeIds) ? data.expandedNodeIds : []
+        );
+        this.selectedNodeId =
+          typeof data.selectedNodeId === 'string' ? data.selectedNodeId : null;
+        this.draggedNodeId = null;
+        this.searchQuery = '';
+        this.filteredNodeIds = null;
+        this.renamingNodeId = null;
+        return true;
+      } catch (error) {
+        console.error('Failed to load file tree from storage:', error);
+        return false;
+      }
     },
   },
 });

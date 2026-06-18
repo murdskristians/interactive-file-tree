@@ -161,9 +161,8 @@ const handleFileSelected = async (event: Event) => {
 };
 
 const handleRefresh = () => {
-  if (props.initialData) {
-    store.loadTree(props.initialData);
-  }
+  // Reload the source data: provided initialData, otherwise the bundled sample.
+  store.loadTree(props.initialData ?? (sampleFileTree as FileTreeNodeType[]));
 };
 
 const handleRename = () => {
@@ -210,13 +209,20 @@ const handleKeyDown = (event: KeyboardEvent) => {
 };
 
 onMounted(() => {
-  // Load tree data
+  // Load tree data with the following precedence:
+  //   1. explicit initialData prop (controlled usage)
+  //   2. a previously persisted tree from localStorage
+  //   3. the bundled sample tree
   if (props.initialData) {
     store.loadTree(props.initialData);
-  } else {
-    // Load sample data if no initial data provided
+  } else if (!store.loadFromStorage()) {
     store.loadTree(sampleFileTree as FileTreeNodeType[]);
   }
+
+  // Auto-save on any subsequent state change.
+  store.$subscribe(() => {
+    store.saveToStorage();
+  });
 
   // Add keyboard event listener
   window.addEventListener('keydown', handleKeyDown);
