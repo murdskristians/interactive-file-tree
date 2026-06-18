@@ -9,6 +9,7 @@ import {
   FilePlus,
   FolderPlus,
   Download,
+  Upload,
   Trash2,
   RefreshCw,
   Search,
@@ -133,6 +134,32 @@ const handleExport = () => {
   URL.revokeObjectURL(url);
 };
 
+// Import a previously exported tree from a JSON file.
+const fileInputRef = ref<HTMLInputElement | null>(null);
+
+const handleImportClick = () => {
+  fileInputRef.value?.click();
+};
+
+const handleFileSelected = async (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    const success = store.importTree(text);
+    if (!success) {
+      alert('Could not import file: the JSON must be an array of tree nodes.');
+    }
+  } catch {
+    alert('Could not read the selected file.');
+  } finally {
+    // Reset so selecting the same file again still fires change.
+    input.value = '';
+  }
+};
+
 const handleRefresh = () => {
   if (props.initialData) {
     store.loadTree(props.initialData);
@@ -250,12 +277,27 @@ onBeforeUnmount(() => {
           <RefreshCw :size="18" />
         </button>
         <button
+          v-if="!options?.readOnly"
+          class="toolbar-button"
+          title="Import JSON"
+          @click="handleImportClick"
+        >
+          <Upload :size="18" />
+        </button>
+        <button
           class="toolbar-button"
           title="Export JSON"
           @click="handleExport"
         >
           <Download :size="18" />
         </button>
+        <input
+          ref="fileInputRef"
+          type="file"
+          accept="application/json,.json"
+          class="visually-hidden-input"
+          @change="handleFileSelected"
+        />
       </div>
     </div>
 
@@ -357,6 +399,10 @@ onBeforeUnmount(() => {
 .toolbar-right {
   display: flex;
   gap: 8px;
+}
+
+.visually-hidden-input {
+  display: none;
 }
 
 .toolbar-button {
