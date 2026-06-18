@@ -2,6 +2,8 @@
 
 A Vue 3 + TypeScript interactive file tree component with drag-and-drop support, built using Vite and Pinia.
 
+**🔗 Live demo: https://interactive-file-tree-kristians.netlify.app**
+
 ## Features
 
 - **Hierarchical File Tree Display**: Navigate through files and folders with expandable/collapsible nodes
