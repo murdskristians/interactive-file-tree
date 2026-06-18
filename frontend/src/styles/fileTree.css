@@ -162,133 +162,163 @@
   }
 }
 
-/* Dark mode support (optional, can be customized) */
-@media (prefers-color-scheme: dark) {
-  html, body {
-    background-color: #0f172a;
-    color: #e2e8f0;
-  }
+/* Dark mode.
+   Driven by the data-theme="dark" attribute on <html> (set by useTheme()),
+   so it can be toggled manually as well as following the OS preference. */
+:root[data-theme='dark'],
+:root[data-theme='dark'] body {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
 
-  .app-header {
-    background: linear-gradient(135deg, #4c1d95 0%, #581c87 100%);
-  }
+:root[data-theme='dark'] .app-header {
+  background: linear-gradient(135deg, #4c1d95 0%, #581c87 100%);
+}
 
-  .app-footer {
-    background: #1e293b;
-    color: #94a3b8;
-  }
+:root[data-theme='dark'] .app-footer {
+  background: #1e293b;
+  color: #94a3b8;
+}
 
-  .app-footer strong {
-    color: #e2e8f0;
-  }
+:root[data-theme='dark'] .app-footer strong {
+  color: #e2e8f0;
+}
 
-  .file-tree-view {
-    background: #1e293b;
-    border-color: #334155;
-    color: #e2e8f0;
-  }
+:root[data-theme='dark'] .file-tree-view {
+  background: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
 
-  .file-tree-toolbar {
-    background: #0f172a;
-    border-color: #334155;
-  }
+:root[data-theme='dark'] .file-tree-toolbar {
+  background: #0f172a;
+  border-color: #334155;
+}
 
-  .toolbar-button {
-    background: #334155;
-    border-color: #475569;
-    color: #e2e8f0;
-  }
+:root[data-theme='dark'] .toolbar-button {
+  background: #334155;
+  border-color: #475569;
+  color: #e2e8f0;
+}
 
-  .toolbar-button:hover {
-    background: #475569;
-    border-color: #64748b;
-  }
+:root[data-theme='dark'] .toolbar-button:hover {
+  background: #475569;
+  border-color: #64748b;
+}
 
-  .file-tree-node {
-    color: #e2e8f0;
-  }
+/* Search bar (dark) */
+:root[data-theme='dark'] .search-bar {
+  background: #0f172a;
+  border-color: #334155;
+}
 
-  .file-tree-node:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
+:root[data-theme='dark'] .search-input {
+  background: #1e293b;
+  border-color: #475569;
+  color: #e2e8f0;
+}
 
-  .file-tree-node.selected {
-    background-color: rgba(59, 130, 246, 0.3);
-  }
+:root[data-theme='dark'] .search-input::placeholder {
+  color: #64748b;
+}
 
-  .node-name {
-    color: #e2e8f0;
-  }
+:root[data-theme='dark'] .search-icon {
+  color: #94a3b8;
+}
 
-  .node-name-input {
-    color: #e2e8f0;
-    background: #0f172a;
-    border-color: #60a5fa;
-  }
+:root[data-theme='dark'] .search-clear-button {
+  color: #94a3b8;
+}
 
-  .node-icon {
-    color: #94a3b8;
-  }
+:root[data-theme='dark'] .search-clear-button:hover {
+  background: #334155;
+  color: #e2e8f0;
+}
 
-  .file-tree-node.folder .node-icon {
-    color: #fbbf24;
-  }
+:root[data-theme='dark'] .file-tree-node {
+  color: #e2e8f0;
+}
 
-  .file-tree-node.selected .node-icon {
-    color: #60a5fa;
-  }
+:root[data-theme='dark'] .file-tree-node:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
 
-  .expand-arrow {
-    color: #94a3b8;
-  }
+:root[data-theme='dark'] .file-tree-node.selected {
+  background-color: rgba(59, 130, 246, 0.3);
+}
 
-  .description-panel {
-    background: #0f172a;
-    border-color: #334155;
-  }
+:root[data-theme='dark'] .node-name {
+  color: #e2e8f0;
+}
 
-  .description-header h3 {
-    color: #e2e8f0;
-  }
+:root[data-theme='dark'] .node-name-input {
+  color: #e2e8f0;
+  background: #0f172a;
+  border-color: #60a5fa;
+}
 
-  .description-path,
-  .description-text,
-  .description-meta {
-    color: #cbd5e1;
-  }
+:root[data-theme='dark'] .node-icon {
+  color: #94a3b8;
+}
 
-  .description-path strong,
-  .description-text strong,
-  .description-meta strong {
-    color: #e2e8f0;
-  }
+:root[data-theme='dark'] .file-tree-node.folder .node-icon {
+  color: #fbbf24;
+}
 
-  .description-placeholder {
-    color: #64748b;
-  }
+:root[data-theme='dark'] .file-tree-node.selected .node-icon {
+  color: #60a5fa;
+}
 
-  .empty-state {
-    color: #64748b;
-  }
+:root[data-theme='dark'] .expand-arrow {
+  color: #94a3b8;
+}
 
-  .empty-state-hint {
-    color: #475569;
-  }
+:root[data-theme='dark'] .description-panel {
+  background: #0f172a;
+  border-color: #334155;
+}
 
-  .file-tree-content::-webkit-scrollbar-track,
-  .description-panel::-webkit-scrollbar-track {
-    background: #1e293b;
-  }
+:root[data-theme='dark'] .description-header h3 {
+  color: #e2e8f0;
+}
 
-  .file-tree-content::-webkit-scrollbar-thumb,
-  .description-panel::-webkit-scrollbar-thumb {
-    background: #475569;
-  }
+:root[data-theme='dark'] .description-path,
+:root[data-theme='dark'] .description-text,
+:root[data-theme='dark'] .description-meta {
+  color: #cbd5e1;
+}
 
-  .file-tree-content::-webkit-scrollbar-thumb:hover,
-  .description-panel::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
-  }
+:root[data-theme='dark'] .description-path strong,
+:root[data-theme='dark'] .description-text strong,
+:root[data-theme='dark'] .description-meta strong {
+  color: #e2e8f0;
+}
+
+:root[data-theme='dark'] .description-placeholder {
+  color: #64748b;
+}
+
+:root[data-theme='dark'] .empty-state {
+  color: #64748b;
+}
+
+:root[data-theme='dark'] .empty-state-hint {
+  color: #475569;
+}
+
+:root[data-theme='dark'] .file-tree-content::-webkit-scrollbar-track,
+:root[data-theme='dark'] .description-panel::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+:root[data-theme='dark'] .file-tree-content::-webkit-scrollbar-thumb,
+:root[data-theme='dark'] .description-panel::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+:root[data-theme='dark'] .file-tree-content::-webkit-scrollbar-thumb:hover,
+:root[data-theme='dark'] .description-panel::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }
 
 /* Print styles */
