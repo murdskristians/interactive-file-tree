@@ -4,6 +4,7 @@ import { useFileTreeStore } from '../stores/fileTreeStore';
 import FileTreeNode from './FileTreeNode.vue';
 import type { FileTreeNode as FileTreeNodeType, FileTreeViewOptions } from '../types/fileTree';
 import sampleFileTree from '../data/sampleFileTree.json';
+import { findParentNode } from '../utils/fileTreeUtils';
 import {
   FilePlus,
   FolderPlus,
@@ -75,37 +76,37 @@ watch(() => props.initialData, (newData) => {
   }
 }, { deep: true });
 
+/**
+ * Resolve the folder that a new node should be created in, based on the
+ * current selection:
+ *   - nothing selected      -> root
+ *   - a folder selected     -> inside that folder
+ *   - a file selected       -> alongside it, in the file's parent folder
+ */
+const resolveTargetParentId = (): string | null => {
+  const selectedNode = store.selectedNode;
+  if (!selectedNode) {
+    return null;
+  }
+  if (selectedNode.type === 'folder') {
+    return selectedNode.id;
+  }
+  // A file is selected: add to its parent folder (null === root).
+  const parent = findParentNode(store.tree, selectedNode.id);
+  return parent ? parent.id : null;
+};
+
 const handleNewFile = () => {
   const name = prompt('Enter file name:');
   if (name && name.trim()) {
-    const parentId = store.selectedNodeId;
-    const selectedNode = store.selectedNode;
-
-    // If selected node is a file, add to its parent
-    let targetParentId = parentId;
-    if (selectedNode && selectedNode.type === 'file') {
-      targetParentId = null; // Will add to root if parent not found
-      // TODO: Find actual parent of file
-    }
-
-    store.addNewFile(targetParentId, name.trim());
+    store.addNewFile(resolveTargetParentId(), name.trim());
   }
 };
 
 const handleNewFolder = () => {
   const name = prompt('Enter folder name:');
   if (name && name.trim()) {
-    const parentId = store.selectedNodeId;
-    const selectedNode = store.selectedNode;
-
-    // If selected node is a file, add to its parent
-    let targetParentId = parentId;
-    if (selectedNode && selectedNode.type === 'file') {
-      targetParentId = null; // Will add to root if parent not found
-      // TODO: Find actual parent of file
-    }
-
-    store.addNewFolder(targetParentId, name.trim());
+    store.addNewFolder(resolveTargetParentId(), name.trim());
   }
 };
 
