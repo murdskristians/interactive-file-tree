@@ -13,6 +13,7 @@ import {
   RefreshCw,
   Search,
   X,
+  Pencil,
 } from 'lucide-vue-next';
 
 interface Props {
@@ -138,10 +139,27 @@ const handleRefresh = () => {
   }
 };
 
+const handleRename = () => {
+  if (store.selectedNodeId) {
+    store.startRenaming(store.selectedNodeId);
+  }
+};
+
 const handleKeyDown = (event: KeyboardEvent) => {
+  // Don't hijack keys while an inline rename input is focused.
+  if (store.renamingNodeId) {
+    return;
+  }
+
   // Handle Delete key
   if (event.key === 'Delete' && store.selectedNodeId) {
     handleDelete();
+  }
+
+  // Handle F2 to rename the selected node
+  if (event.key === 'F2' && store.selectedNodeId) {
+    event.preventDefault();
+    handleRename();
   }
 
   // Handle Cmd/Ctrl + F to focus search
@@ -205,6 +223,14 @@ onBeforeUnmount(() => {
         >
           <FolderPlus :size="18" />
           <span>New Folder</span>
+        </button>
+        <button
+          v-if="!options?.readOnly && store.selectedNodeId"
+          class="toolbar-button"
+          title="Rename (F2)"
+          @click="handleRename"
+        >
+          <Pencil :size="18" />
         </button>
         <button
           v-if="!options?.readOnly && store.selectedNodeId"

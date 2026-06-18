@@ -33,6 +33,8 @@ export interface FileTreeState {
   draggedNodeId: string | null;
   searchQuery: string;
   filteredNodeIds: Set<string> | null;
+  /** Id of the node currently being renamed inline, or null. */
+  renamingNodeId: string | null;
 }
 
 /**

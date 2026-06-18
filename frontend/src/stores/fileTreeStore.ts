@@ -26,6 +26,7 @@ export const useFileTreeStore = defineStore('fileTree', {
     draggedNodeId: null,
     searchQuery: '',
     filteredNodeIds: null,
+    renamingNodeId: null,
   }),
 
   getters: {
@@ -96,6 +97,7 @@ export const useFileTreeStore = defineStore('fileTree', {
       this.draggedNodeId = null;
       this.searchQuery = '';
       this.filteredNodeIds = null;
+      this.renamingNodeId = null;
     },
 
     /**
@@ -235,8 +237,30 @@ export const useFileTreeStore = defineStore('fileTree', {
       // Remove from expanded set
       this.expandedNodeIds.delete(nodeId);
 
+      // Cancel an in-progress rename of the deleted node
+      if (this.renamingNodeId === nodeId) {
+        this.renamingNodeId = null;
+      }
+
       this.tree = removeNode(this.tree, nodeId);
       return true;
+    },
+
+    /**
+     * Begin inline renaming of a node (selecting it in the process).
+     */
+    startRenaming(nodeId: string): void {
+      if (findNodeById(this.tree, nodeId)) {
+        this.selectedNodeId = nodeId;
+        this.renamingNodeId = nodeId;
+      }
+    },
+
+    /**
+     * Cancel/finish inline renaming without committing a change.
+     */
+    stopRenaming(): void {
+      this.renamingNodeId = null;
     },
 
     /**
@@ -296,6 +320,7 @@ export const useFileTreeStore = defineStore('fileTree', {
       this.draggedNodeId = null;
       this.searchQuery = '';
       this.filteredNodeIds = null;
+      this.renamingNodeId = null;
     },
 
     /**
@@ -321,6 +346,7 @@ export const useFileTreeStore = defineStore('fileTree', {
       };
 
       this.tree = updateName(this.tree);
+      this.renamingNodeId = null;
       return true;
     },
 

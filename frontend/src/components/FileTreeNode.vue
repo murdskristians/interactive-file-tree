@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import type { FileTreeNode as FileTreeNodeType } from '../types/fileTree';
 import { useFileTreeStore } from '../stores/fileTreeStore';
 import { useFileTreeDragDrop } from '../composables/useFileTreeDragDrop';
@@ -148,6 +148,42 @@ const toggleExpand = (event: Event) => {
     store.toggleNode(props.node.id);
   }
 };
+
+// --- Inline rename ---
+const isRenaming = computed(() => store.renamingNodeId === props.node.id);
+const renameInputRef = ref<HTMLInputElement | null>(null);
+const draftName = ref(props.node.name);
+
+// When this node enters rename mode, seed the draft and focus/select the input.
+watch(isRenaming, async (renaming) => {
+  if (renaming) {
+    draftName.value = props.node.name;
+    await nextTick();
+    renameInputRef.value?.focus();
+    renameInputRef.value?.select();
+  }
+});
+
+const beginRename = (event: Event) => {
+  event.stopPropagation();
+  store.startRenaming(props.node.id);
+};
+
+const commitRename = () => {
+  if (!isRenaming.value) return;
+  const trimmed = draftName.value.trim();
+  if (trimmed && trimmed !== props.node.name) {
+    store.renameNode(props.node.id, trimmed);
+  } else {
+    // No change or empty: just leave rename mode.
+    store.stopRenaming();
+  }
+};
+
+const cancelRename = () => {
+  draftName.value = props.node.name;
+  store.stopRenaming();
+};
 </script>
 
 <template>
@@ -182,8 +218,20 @@ const toggleExpand = (event: Event) => {
           <component :is="iconComponent" :size="18" />
         </div>
 
-        <!-- Node name -->
-        <div class="node-name">{{ node.name }}</div>
+        <!-- Node name (double-click to rename) -->
+        <input
+          v-if="isRenaming"
+          ref="renameInputRef"
+          v-model="draftName"
+          class="node-name-input"
+          type="text"
+          @click.stop
+          @dblclick.stop
+          @keydown.enter.prevent="commitRename"
+          @keydown.esc.prevent="cancelRename"
+          @blur="commitRename"
+        />
+        <div v-else class="node-name" @dblclick="beginRename">{{ node.name }}</div>
       </div>
     </div>
 
@@ -309,6 +357,20 @@ const toggleExpand = (event: Event) => {
   white-space: nowrap;
   font-size: 14px;
   color: #111827;
+}
+
+.node-name-input {
+  flex: 1;
+  min-width: 0;
+  padding: 1px 4px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #111827;
+  background: #ffffff;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .node-children {

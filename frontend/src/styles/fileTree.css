@@ -220,6 +220,12 @@
     color: #e2e8f0;
   }
 
+  .node-name-input {
+    color: #e2e8f0;
+    background: #0f172a;
+    border-color: #60a5fa;
+  }
+
   .node-icon {
     color: #94a3b8;
   }
